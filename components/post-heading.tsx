@@ -1,0 +1,46 @@
+import React from "react";
+
+type HeadingProps = {
+  id: string;
+  level?: number;
+  fontSize?: number;
+  children: React.ReactNode;
+};
+
+const H = ({ id, level = 2, fontSize = 20, children }: HeadingProps) => (
+  <div id={id}>
+    {React.createElement(
+      `h${level}`,
+      { style: { fontWeight: 500, fontSize } },
+      <span>
+        <a href={`#${id}`}>#</a>
+      </span>,
+      children
+    )}
+
+    <style jsx>{`
+      div {
+        margin: 50px 0 25px;
+        font-family: Helvetica Neue, Helvetica, Arial, "Lucida Grande",
+          sans-serif;
+      }
+
+      span {
+        position: absolute;
+        margin-left: -15px;
+        width: 15px;
+      }
+
+      a {
+        text-decoration: none;
+        color: #999;
+      }
+    `}</style>
+  </div>
+);
+
+const H2 = H;
+const H3 = (props: HeadingProps) => H({ ...props, level: 3, fontSize: 18 });
+
+export default H2;
+export { H2, H3 };

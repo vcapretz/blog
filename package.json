@@ -8,11 +8,18 @@
     "start": "next start"
   },
   "dependencies": {
+    "@mdx-js/react": "^1.6.22",
+    "comma-number": "^2.0.1",
+    "firebase": "^8.2.2",
+    "firebase-admin": "^9.4.2",
     "next": "10.0.5",
+    "nextra": "^0.3.2",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "time-ago": "^0.2.1"
   },
   "devDependencies": {
+    "@types/mdx-js__react": "^1.5.3",
     "@types/node": "^14.14.20",
     "@types/react": "^17.0.0",
     "@types/styled-jsx": "^2.2.8",

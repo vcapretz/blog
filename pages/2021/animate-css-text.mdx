@@ -1,0 +1,134 @@
+---
+title: CSS Text Animation
+date: January 14, 2021
+description: Figuring out how to animate text with CSS only
+og: https://images.unsplash.com/photo-1524666643752-b381eb00effb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=3751&q=80
+---
+
+import Image from "next/image";
+
+I've been posting on Medium and also on Dev.to and the time has come for me to host my own blog now.
+
+In the process of figuring out the layout I stumbled on [Rauch's blog](https://rauchg.com/) and decided to clone his repository and iterate on my own over time.
+
+I didn't want to use the same square SVG as his so I decided to play with some animations and make something myself.
+
+The final animation should:
+
+<ol style={{ listStyle: "decimal outside" }}>
+  <li>Be accessible;</li>
+  <li>
+    Not use JS. So users can still experience it if they decide to disable JS
+    for the page.
+  </li>
+</ol>
+
+For the point **_#1_** my idea has to keep the HTML markup simple, having less problems by default with screen readers.
+Point **_#2_** quickly removes a lot of options and tutorials you find on Google.
+
+<h2 id="goal">The goal</h2>
+
+Here's a GIF with my desired outcome, I wanted to play with my full name (Vitor Capretz) and the username I use everywhere online (including this blog's domain), which is **vcapretz** only.
+
+To guide users into making the connection with my name I thought I could fade out the **_itor_** part and then slide the rest together:
+
+<Image
+  src="/images/animate-css-text/blog_animation.gif"
+  width={576}
+  height={112}
+  alt="Text animation from vitorcapretz.com to vcapretz.com by fading and moving part of the text"
+/>
+
+<h2 id="code">The code</h2>
+
+To make sure the code would still be accessible (and avoid hurting SEO at the same time) I wanted to keep into one element only, the HTML markup ends up being fairly simple:
+
+```html
+<div>
+  <span>vitorcapretz.com</span>
+</div>
+```
+
+The div is there as a wrapper for styling purposes (encapsulate the `span` tag in a smaller scope).
+The actual text interpreted in the HTML markup and also by screen readers will be the most descriptive one, with my full name.
+
+To get the desired effect I considered the animation having 3 "parts": the letter **_v_** would stay in place, the **_capretz.com_** is what slides and the letters in between fade out.
+
+Achieving that without JavaScript (you can for instance select each letter and play with them) proved more difficulty than I thought, so I used the `::before` and `::after` selectors in css. They allow you changing the rendered page without adding new explict tags to it.
+
+```css
+span {
+  padding: 10px;
+
+  animation: animate-main 1s ease-in-out 2s forwards;
+}
+
+span:before {
+  content: "v";
+  position: absolute;
+  color: black;
+}
+
+span:after {
+  content: "capretz.com";
+
+  position: absolute;
+  right: 10px; // add 10 because of the padding applied to the actual span
+
+  color: black;
+
+  animation: animate-after 1s ease-in-out 3s forwards;
+}
+```
+
+With this part added I got a new _v_ letter and _capretz.com_ placed in front of the original ones (using absolute positioning), so we can use the `animate-main` animation to fade-out.
+
+The thing with css animations is that you cannot apply it to every property, it (usually) has to be something linear, like a number going up or down between animation frames.
+
+I tried using `opacity` and quickly realized that because it is applied to the parent `span` tag it will hide everything, no good.
+
+I figured I could try animating colors instead, if the main text goes from `black` to `white` we can achieve the visual effect of them not being visible anymore, the declaration looks like:
+
+```css
+@keyframes animate-main {
+  0% {
+    color: black;
+  }
+
+  100% {
+    color: white;
+  }
+}
+```
+
+> `black` and `white` are HEX values in the end, thus being iterable.
+
+Now we need to move the _capretz.com_ text to the side, touching the remaining _v_ letter, which can be done by translating the element:
+
+```css
+@keyframes animate-after {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-27%);
+  }
+}
+```
+
+I tweaked with the translation values and magically came up with the _27%_, this is likely not a reliable solution (say I change the text, I would need to tweak the values again).
+
+Both animations have a `delay` value (set right next to the timing function, which is `ease-in-out` in this case), as I wanted the first part to start only after a few seconds the page has been rendered, the second part has to wait for the first one to be complete.
+
+<h2 id="final-words">Final words</h2>
+
+If you want to check out the full code, feel free to head to the [logo component GitHub link](https://github.com/vcapretz/blog/blob/main/components/logo.tsx)!
+
+When testing the code I noticed I was applying some stlying to the its background on `:hover` state, which then made the letters somewhat visible. I then learned you can also use `color: transparent` in the animation, which solved the hover problem.
+
+If you have any feedback or suggestions to my solution (or to the blog post) please [send a DM on Twitter](https://twitter.com/vcapretz) and I'll be glad to hear from you!
+
+My code is not perfect and the same result can likely be achieved in many ways.
+
+Thank you for you time, have a great day 😃
