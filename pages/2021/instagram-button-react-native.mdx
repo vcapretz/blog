@@ -1,0 +1,260 @@
+---
+title: Instagram Like button in React Native and Reanimated v2
+date: January 15, 2021
+description: How to use reanimated v2 in React Native to build the Instagram like button
+og: https://images.unsplash.com/photo-1585250003309-694ff34512d7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80
+---
+
+import Image from "next/image";
+
+One of the ways to make and app feel more polished is by introducing animations and transitions that lead to a better visual feedback when users are interacting with your app.
+
+For me personally it has been fun looking for small things that I can do and will make up a great addition in the end.
+
+Let's explore how to bring a better experience when users are toggling a "like" button by reproducing (or trying to) the Instagram version.
+
+<h2 id="why-reanimated">Why Reanimated?</h2>
+
+React Native has its own animation APIs and they work great for a lot of cases. The issue is that for more complex scenarios it will not support running those animations in the native thread, which them can cause performance issues and unresponsiveness since it then competes resources with JavaScript.
+
+[React Native Reanimated](https://github.com/software-mansion/react-native-reanimated) is a library that allows developers to write smooth animations on React Native by making sure they are rendered in the native thread and not blocking JavaScript from handling other stuff at the same time.
+
+They recently rewrote the entire library by re-thinking both the architecture and all of the APIs they provide.
+
+One of the goals being to make it easier for developers to use and understand, so I've been using the version 2 for some time and I think you should too!
+
+> As of today the v2 is in [Release candidate](https://en.wikipedia.org/wiki/Software_release_life_cycle#Release_candidate) so it will soon be ready for production.
+
+<h2 id="simple-like-button">A simple like button</h2>
+
+To start a simple like button, we would need a component that can handle a press event, a state to toggle between **liked** and **not-liked** and an icon.
+
+> If you want to follow along go to your terminal and hit `npx crna --template with-reanimated2` to start a brand new React Native project with Expo and Reanimated v2 installed.
+
+The minimal code would look like this:
+
+```jsx
+import React, { useState } from "react";
+import { Pressable } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+const LikeButton = () => {
+  const [liked, setLiked] = useState(false);
+
+  return (
+    <Pressable onPress={() => setLiked((isLiked) => !isLiked)}>
+      <MaterialCommunityIcons
+        name={liked ? "heart" : "heart-outline"}
+        size={32}
+        color={liked ? "red" : "black"}
+      />
+    </Pressable>
+  );
+};
+```
+
+So we used:
+
+<ul style={{ listStyle: "disc outside" }}>
+  <li>`useState` to store and toggle the _like_ value;</li>
+  <li>
+    `Pressable` component to handle the press event, toggling the state based on
+    the current previous value of `liked`;
+  </li>
+  <li>
+    `MaterialCommunityIcons` component that either shows an outline version of
+    the heart or the filled one based on the state.
+  </li>
+</ul>
+
+If you're following along and you render that component in a page you will have a result like this:
+
+<Image
+  src="/images/instagram-button-react-native/simple-like.gif"
+  width={323}
+  height={700}
+  alt="Simple heart button which reacts to a press event, toggling between an outline state and a red filled heart one"
+/>
+
+It works, but it's boring.
+
+<h2 id="introducing-animations">Introducing animations</h2>
+
+Instagram's Like button brings a nice experience by fading in and out with **scale** its state when it's pressed.
+
+The strategy is then to scale the non-liked version from **1** to **0** (making it disappear) and then the liked version from **0** to **1** (making it appear on top).
+
+We start by having two icons stacked on top of each other instead of only one:
+
+```jsx
+<Pressable onPress={() => setLiked((isLiked) => !isLiked)}>
+  <Animated.View
+    style={[
+      StyleSheet.absoluteFillObject,
+      { transform: [{ scale: liked ? 0 : 1 }] },
+    ]}
+  >
+    <MaterialCommunityIcons name={"heart-outline"} size={32} color={"black"} />
+  </Animated.View>
+
+  <Animated.View style={[{ transform: [{ scale: liked ? 1 : 0 }] }]}>
+    <MaterialCommunityIcons name={"heart"} size={32} color={"red"} />
+  </Animated.View>
+</Pressable>
+```
+
+<ul style={{ listStyle: "disc outside" }}>
+  <li>
+    `Animated.View` is used to wrap the icons, which we will animate. import the
+    `Animated` from `react-native-reanimated`;
+  </li>
+  <li>
+    We use absolute positioning in the first view, so the other one can stay on
+    top;
+  </li>
+  <li>
+    We apply the `scale` styles based on the state's value, nothing has changed
+    so far. Still boring.
+  </li>
+</ul>
+
+With this setup we can now animate the scale. Exciting!
+
+`react-native-reanimated` provides some very useful hooks for us, we will use them.
+
+We change React's `useState` by Reanimated's `useSharedValue`, which also gives us a state, but this one can be used in both JavaScript and Native threads.
+
+```js
+const liked = useSharedValue(0);
+```
+
+> We will now use numbers instead of booleans so we can interpolate them and use directly into the styles as well.
+
+The `onPress` event now has to be changed too since we don't have `setState` anymore:
+
+```js
+onPress={() => (liked.value = withSpring(liked.value ? 0 : 1))}
+```
+
+> Note that we use `.value` here to reference the actual value of the state.
+
+`withSpring` is part of the magic, that is a method provided by Reanimated that tells it to change the animated value using a spring animation with default values.
+
+Finally, we need to update the styles correctly based on the animated value, we will use `useAnimatedStyle`:
+
+```js
+const outlineStyle = useAnimatedStyle(() => {
+  return {
+    transform: [
+      {
+        scale: interpolate(liked.value, [0, 1], [1, 0], Extrapolate.CLAMP),
+      },
+    ],
+  };
+});
+
+const fillStyle = useAnimatedStyle(() => {
+  return {
+    transform: [
+      {
+        scale: liked.value,
+      },
+    ],
+  };
+});
+```
+
+The `useAnimatedStyle` hook receives a function that returns a style that gets updated based on animation values, we moved the inline styles from `Animated.View` to this hook instead.
+
+For the _outline_ style we need to interpolate the animated value in the opposite way:
+
+- If `liked.value` is 0 it means the scale for the outline style should be 1, if `liked.value` is 1 then the scale should be 0.
+
+The _fill_ style needs no interpolation, since it follows `liked.value` linearly.
+
+Here's the component so far and the current result:
+
+```jsx
+const LikeButton = () => {
+  const liked = useSharedValue(0);
+
+  const outlineStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: interpolate(liked.value, [0, 1], [1, 0], Extrapolate.CLAMP),
+        },
+      ],
+    };
+  });
+
+  const fillStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: liked.value,
+        },
+      ],
+    };
+  });
+
+  return (
+    <Pressable onPress={() => (liked.value = withSpring(liked.value ? 0 : 1))}>
+      <Animated.View style={[StyleSheet.absoluteFillObject, outlineStyle]}>
+        <MaterialCommunityIcons
+          name={"heart-outline"}
+          size={32}
+          color={"black"}
+        />
+      </Animated.View>
+
+      <Animated.View style={fillStyle}>
+        <MaterialCommunityIcons name={"heart"} size={32} color={"red"} />
+      </Animated.View>
+    </Pressable>
+  );
+};
+```
+
+<Image
+  src="/images/instagram-button-react-native/animated-like-1.gif"
+  width={323}
+  height={700}
+  alt="A heart icon that toggles based on a press event but this time with an animation, which fades out the outline version, bringing in the filled one"
+/>
+
+That is much better 🎉
+
+If you pay close attention you'll see that the filled icon bounces too much in the end and can still be seen.
+
+We can fix that by also styling the opacity, so it's not visible.
+
+Change the `fillStyle` so it looks like this:
+
+```js
+const fillStyle = useAnimatedStyle(() => {
+  return {
+    transform: [{ scale: liked.value }],
+    opacity: liked.value,
+  };
+});
+```
+
+<Image
+  src="/images/instagram-button-react-native/animated-like2.gif"
+  width={323}
+  height={700}
+  alt="A heart icon that toggles based on a press event but this time with an animation, which fades out the outline version, bringing in the filled one"
+/>
+
+Nice one!
+
+I posted the completed example in this [gist with the entire component](https://gist.github.com/vcapretz/e7b172154774e24487d3c46677b08de2) so you can more easily understand it and even copy/paste in our own apps.
+
+<h2 id="done">We're done</h2>
+
+It's always interesting to explore these smaller interactions that can make a real difference in an app, let me know if you have any others you usually apply by [reaching out on Twitter](https://twitter.com/vcapretz).
+
+I hope you learned something fun, and as always, I'm open to any kind of feedback at all you might have for me.
+
+Thank's for your time 👋
