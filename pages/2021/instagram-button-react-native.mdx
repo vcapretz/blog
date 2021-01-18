@@ -118,7 +118,7 @@ We start by having two icons stacked on top of each other instead of only one:
   </li>
 </ul>
 
-With this setup we can now animate the scale. Exciting!
+With this setup, we can now animate the scale. Exciting!
 
 `react-native-reanimated` provides some very useful hooks for us, we will use them.
 
@@ -128,7 +128,7 @@ We change React's `useState` by Reanimated's `useSharedValue`, which also gives 
 const liked = useSharedValue(0);
 ```
 
-> We will now use numbers instead of booleans so we can interpolate them and use directly into the styles as well.
+> We will now use numbers instead of booleans so we can interpolate and use them directly into the styles as well.
 
 The `onPress` event now has to be changed too since we don't have `setState` anymore:
 
@@ -170,7 +170,7 @@ For the _outline_ style we need to interpolate the animated value in the opposit
 
 - If `liked.value` is 0 it means the scale for the outline style should be 1, if `liked.value` is 1 then the scale should be 0.
 
-The _fill_ style needs no interpolation, since it follows `liked.value` linearly.
+The _fill_ style needs no interpolation since it follows `liked.value` linearly.
 
 Here's the component so far and the current result:
 
