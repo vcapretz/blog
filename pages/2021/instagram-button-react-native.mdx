@@ -7,27 +7,27 @@ og: https://images.unsplash.com/photo-1585250003309-694ff34512d7?ixid=MXwxMjA3fD
 
 import Image from "next/image";
 
-One of the ways to make and app feel more polished is by introducing animations and transitions that lead to a better visual feedback when users are interacting with your app.
+One of the ways to make an app feel more polished is by introducing animations and transitions that lead to better visual feedback when users are interacting with your app.
 
-For me personally it has been fun looking for small things that I can do and will make up a great addition in the end.
+For me personally, it has been fun looking for small things that I can do and will make up a great addition in the end.
 
 Let's explore how to bring a better experience when users are toggling a "like" button by reproducing (or trying to) the Instagram version.
 
 <h2 id="why-reanimated">Why Reanimated?</h2>
 
-React Native has its own animation APIs and they work great for a lot of cases. The issue is that for more complex scenarios it will not support running those animations in the native thread, which them can cause performance issues and unresponsiveness since it then competes resources with JavaScript.
+React Native has its own animation APIs and they work great for a lot of cases. The issue is that for more complex scenarios it will not support running those animations in the native thread, which can cause performance issues and unresponsiveness since it then competes for resources with JavaScript.
 
 [React Native Reanimated](https://github.com/software-mansion/react-native-reanimated) is a library that allows developers to write smooth animations on React Native by making sure they are rendered in the native thread and not blocking JavaScript from handling other stuff at the same time.
 
 They recently rewrote the entire library by re-thinking both the architecture and all of the APIs they provide.
 
-One of the goals being to make it easier for developers to use and understand, so I've been using the version 2 for some time and I think you should too!
+One of the goals being to make it easier for developers to use and understand, so I've been using version 2 for some time and I think you should too!
 
 > As of today the v2 is in [Release candidate](https://en.wikipedia.org/wiki/Software_release_life_cycle#Release_candidate) so it will soon be ready for production.
 
 <h2 id="simple-like-button">A simple like button</h2>
 
-To start a simple like button, we would need a component that can handle a press event, a state to toggle between **liked** and **not-liked** and an icon.
+To start a simple like button, we would need a component that can handle a press event, a state to toggle between **liked** and **not-liked**, and an icon.
 
 > If you want to follow along go to your terminal and hit `npx crna --template with-reanimated2` to start a brand new React Native project with Expo and Reanimated v2 installed.
 
