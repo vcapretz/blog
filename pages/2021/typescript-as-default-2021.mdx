@@ -58,7 +58,43 @@ Keep looking for improvements and know it's not a one-time event. I strongly bel
 
 Everything in tech (maybe in life?) comes with tradeoffs, you choose one thing and you need to understand what's the cost, can you roll back from your decisions easily? Are the benefits strong enough to keep you on the same path? 
 
+Here are some of the things I personally struggle with:
+
+<h3 id="1-multiple-extensions">1 - Support for files with the same name and multiple extensions</h3>
+
+I spend most of my time writing React Native code in a codebase that also compiles to Web, so it happens sometimes that the same file `MyComponent` will have `.ios.ts`, `.android.ts` or `.native.ts` and then `.web.ts` extensions, I am not sure if we just didn't quite find the right setup yet but navigating to those files by `CMD + Click` on VSCode doesn't really work well in our huge codebase. 
+
+We have to declare a common `MyComponent.d.ts` file that exports the correct typings for all platforms, which also makes it harder to split between native or web-only _props_ a component might receive.
+
+<h3 id="2-complicate-fast">2 - Types can get really annoying/complicated really fast</h3>
+
+There will be moments where you're in the flow building a cool feature, then get stuck in a type that's giving you some trouble. 
+
+TypeScript inference system works great for simple things, but try adding `ramda` and using `pipe` with multiple curried functions and you're lost.
+
+There are other particular scenarios where a function might not be properly typed, then you have to use `ReturnType` and hope it works. 
+
+You'll lose some time every now and then just trying to figure out the types, which will make you wonder if it's all even worth it.
+
+<h3 id="3-barries-entry">3 - Barries to Entry</h3>
+
+Adding TypeScript to your codebase will be a larger barry to entry for everyone working on your project.
+
+It's one step more in your onboarding and a culture mindset you're going to have to train people for, that includes having more documentation and people willing to spend some _more_ time with the new person. Or even adjusting the expectations so you're not pressuring a new developer to start delivering projects when they are still adapting to your codebase.
+
+Hiring can also be more difficult, it's a tricky situation since one might say "make it a requirement for new candidates" and you possibly leave a lot of good people out from your interview process because they didn't have the opportunity to learn TypeScript yet.
+
+For me, the best approach is to make it clear in the interviews that you don't expect them to know it right away, but they should be comfortable and willing to learn in the first few weeks/months when hired (that applies to React Native developers too since it's hard to find people with experience in it we often hire Web Developers who are willing to step on the native land).
+
+<h3 id="4-addon">4 - In the end of the day, it's still an "addon"</h3>
+
+TypeScript is defined as a superset of JavaScript, so in theory, you keep writing your normal JavaScript code and you give it extra powers by typing it, and as with anything that is an "addon" to any programming language is that it can eventually fade away, lose its hype, support from the community and then you're stuck with it until your next big rewrite.
+
+> Yeah, this applies to anything in tech really, programming languages also die. But we do have to keep it in mind when making decisions. You get the point.
+
 Part of a decision in betting in TypeScript was that it eventually became what seems the standard approach for the community. Remember I mentioned we also had files typed with `Flow` instead? What if we bet hard on TypeScript just so it died after a while? That's one of the reasons not to jump too early in some decisions that may cost too much to revert. 
+
+<h2 id="resources">Resources</h2>
 
 Every personal project I do now start by bootstrapping it with TypeScript, and the experience is great! If you can't move an existing codebase, try starting with the new ones you're still setting up, or introduce TypeScript while allowing files in JS so there's no need to migrate all at once. 
 
@@ -66,7 +102,7 @@ Every personal project I do now start by bootstrapping it with TypeScript, and t
 
 TypeScript still has a long way to go, but I believe now we are not anymore in the "_too soon_" moment, it has been proven to work for many different types of projects in all sizes and the support from the community is great!
 
-<h2 id="resources">Resources</h2>
+**So if you haven't yet, give it a try!**
 
 At this point there are tons of resources out there so you can learn how to setup TypeScript in any kind of project, no matter if you are using Vue, React, Svelte, or even just setting up a small server with Node.js. Go to your favorite search engine and look for `TypeScript + [your favorite cookie flavor]`, you'll find it.
 
@@ -75,6 +111,8 @@ Personally, I keep coming back to [TypeScript's website](http://typescriptlang.o
 I've been using a lot of GraphQL recently and I've been benefiting from [the TypeGraphQL framework](https://typegraphql.com) to generate typed schemas from my Back-end services that then can be shared with the applications consuming it.
 
 [Ben Awad's incredibly long and useful YouTube tutorial](https://www.youtube.com/watch?v=I6ypD7qv3Z8&t=1013s) was also a great refresher for me on one of the ways a modern application can be built.
+
+My good friend and one of my TypeScript mentors, [@Yurick_](https://twitter.com/Yurick_), also recommended [tsdx](https://github.com/formium/tsdx) for when you need to start new TypeScript out of the _React realm_. I didn't personally use it but it might be worth it to take a look!
 
 <hr />
 

@@ -7,7 +7,7 @@ import withViews from "../lib/with-views";
 
 import { Post } from "./post";
 import { Header } from "./post-header";
-import { H2 } from "./post-heading";
+import { H2, H3 } from "./post-heading";
 import { P } from "./post-paragraph";
 import { Snippet } from "./post-snippet";
 import { Quote } from "./post-quote";
@@ -16,6 +16,7 @@ import { Hr } from "./post-hr";
 
 const components = {
   h2: H2,
+  h3: H3,
   p: P,
   code: Snippet,
   inlineCode: Code,
