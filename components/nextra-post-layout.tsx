@@ -12,6 +12,7 @@ import { P } from "./post-paragraph";
 import { Snippet } from "./post-snippet";
 import { Quote } from "./post-quote";
 import { Code } from "./post-code";
+import { Hr } from "./post-hr";
 
 const components = {
   h2: H2,
@@ -19,6 +20,7 @@ const components = {
   code: Snippet,
   inlineCode: Code,
   blockquote: Quote,
+  hr: Hr,
   a: ({ children, href }: { children: React.ReactNode; href: string }) => {
     if (!href.startsWith("/")) {
       return (
