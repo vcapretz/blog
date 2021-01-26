@@ -1,0 +1,85 @@
+---
+title: Using TypeScript by default in 2021
+date: January 26, 2021
+description: My own experience with using TypeScript by default in every project and some tips for you to do the same
+og: https://images.unsplash.com/photo-1534609146522-5d8de8a10058?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80
+---
+
+import Image from "next/image";
+
+Yes, TypeScript is (still) a controversial subject to talk about in the JavaScript community, as with unit testing or automated tests in general, I still feel like people have very different opinions and experiences with both. But I've been using TypeScript in every project for more than a year and I am a strong believer in it.
+
+TypeScript won last year's [State of JavaScript award as the most adopted technology in the JS ecosystem in 2020](https://2020.stateofjs.com/en-US/awards/), the interest and adoption continue to grow, and if you never tried or didn't adopt it yet, it might be time to do so.
+
+<Image
+  src="/images/typescript-as-default-2021/state-of-js-award-ts.png"
+  width={630}
+  height={577}
+  alt="Image of TypeScript as a winner for the most adopted technology in 2020 in the JavaScript ecosystem"
+/>
+
+<h2 id="how-it-started">How it started for me</h2>
+
+You may have heard about the term "**JS fatigue**": when you realize that there's too much to learn in the JavaScript (_JS_) ecosystem and you rush to keep pace with the community and don't miss out on what everyone else seems to be talking about.
+
+_**Been there, done that**_.
+
+So when I decided to take it slower for my own mental sanity, TypeScript was one of the technologies I deliberately chose to scope out of the things I would spend my time learning and let it evolve, and if needed I would learn it. 
+
+The time has come when back in 2019 I was working on a React Native app with lots of Node.js microservices in a mono repo that had 100 or so developers committing every single day. The legacy code was mainly un-typed and we had a few instances of _Flow_ and even TypeScript running here and there. We didn't have any official tooling nor guidelines, and when left up to each team to decide what they would choose, they went with the pure JavaScript approach.
+
+We were growing fast, a few months later we were reaching 200-300 developers working in the same app and still hiring.
+
+Some developers with previous TypeScript experience and willingness to try it out started looking for guidance, better tooling, and official support from the teams who supported the app. It eventually got enough traction, knowledge was being spread, we started understanding the benefits and we were open to taking the time in our smaller teams so we could assist whenever possible.
+
+After months of discussing possible approaches, how we would need to improve tooling and developer experience, and a lot of knowledge sharing, the work started happening, and soon we would see many open Pull Requests where hundreds of files were being migrated from JavaScript to TypeScript. 
+
+The thing is that for it to happen I believe everyone (or most of the people at least) should be involved.
+
+Say you are consuming services or modules from different teams and they decide not to collaborate with the migration, then a few `any` typings start spreading and soon you lose a lot of the value that having a strongly typed codebase brings.
+
+That's why I believe having started with knowledge sharing was the right step for us.
+
+<h2 id="how-is-it-going">How is it going</h2>
+
+We are around 300 developers now and I would say at least 80% of our codebase is strongly typed, I feel more confident with a change I introduce, as soon as I see the TypeScript compiler screaming at me because I'm trying to use a component with missing props without the need to actually wait for the app to build and see it as a warning in the console instead, I thank the TypeScript gods. 
+
+It's hard to reach 100% typing in such a large codebase, even tho I still strive for it and we should continue to do so, we are still building products, shipping new features, and fixing bugs.
+
+**We can't always stop the train.**
+
+It's also important to keep your eyes open, as new developers join the company they will not have the same background, so have internal docs with guides and make sure knowledge is being constantly spread. 
+
+When I see new Pull Requests where new JavaScript files are being created I ask the developer why is that. If they are doing so it might be a sign that our process is still not good enough. Did they find our docs? Was their onboarding in the company correctly ran? Does our tooling still have flaws? You get the point.
+
+Keep looking for improvements and know it's not a one-time event. I strongly believe the benefits do pay off.
+
+<h2 id="tradeoffs">Tradeoffs</h2>
+
+Everything in tech (maybe in life?) comes with tradeoffs, you choose one thing and you need to understand what's the cost, can you roll back from your decisions easily? Are the benefits strong enough to keep you on the same path? 
+
+Part of a decision in betting in TypeScript was that it eventually became what seems the standard approach for the community. Remember I mentioned we also had files typed with `Flow` instead? What if we bet hard on TypeScript just so it died after a while? That's one of the reasons not to jump too early in some decisions that may cost too much to revert. 
+
+Every personal project I do now start by bootstrapping it with TypeScript, and the experience is great! If you can't move an existing codebase, try starting with the new ones you're still setting up, or introduce TypeScript while allowing files in JS so there's no need to migrate all at once. 
+
+> **Tip**: Most commands to bootstrap a project nowadays have a TypeScript template, try using them more often! Some examples are: `npx react-native init AwesomeTSProject --template react-native-template-typescript` for apps or `npx create-next-app --example with-typescript with-typescript-app` for websites. 
+
+TypeScript still has a long way to go, but I believe now we are not anymore in the "_too soon_" moment, it has been proven to work for many different types of projects in all sizes and the support from the community is great!
+
+<h2 id="resources">Resources</h2>
+
+At this point there are tons of resources out there so you can learn how to setup TypeScript in any kind of project, no matter if you are using Vue, React, Svelte, or even just setting up a small server with Node.js. Go to your favorite search engine and look for `TypeScript + [your favorite cookie flavor]`, you'll find it.
+
+Personally, I keep coming back to [TypeScript's website](http://typescriptlang.org) since I know it will contain the most updated information.
+
+I've been using a lot of GraphQL recently and I've been benefiting from [the TypeGraphQL framework](https://typegraphql.com) to generate typed schemas from my Back-end services that then can be shared with the applications consuming it.
+
+[Ben Awad's incredibly long and useful YouTube tutorial](https://www.youtube.com/watch?v=I6ypD7qv3Z8&t=1013s) was also a great refresher for me on one of the ways a modern application can be built.
+
+<hr />
+
+So, do you already use TypeScript? Do you now hate me for even suggesting it? [Let's chat on Twitter so I can hear your thoughts!](https://twitter.com/vcapretz)
+
+I hope I gave you a nice perspective from my own experience, I know it's not the same for everyone but I'm curious to learn as well 😃
+
+Have a great day! 👋

@@ -1,6 +1,11 @@
 {
   "posts": [
     {
+      "id": "typescript-as-default-2021",
+      "date": "January 26, 2021",
+      "title": "Using TypeScript by default in 2021"
+    },
+    {
       "id": "instagram-button-react-native",
       "date": "January 15, 2021",
       "title": "Instagram like button in React Native and Reanimated v2"
